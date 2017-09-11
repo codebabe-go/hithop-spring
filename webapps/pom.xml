@@ -16,5 +16,17 @@
         <module>outspace</module>
     </modules>
 
+    <dependencies>
+        <dependency>
+            <groupId>hithop-spring</groupId>
+            <artifactId>common</artifactId>
+            <version>${hithop.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>hithop-spring</groupId>
+            <artifactId>engine</artifactId>
+            <version>${hithop.version}</version>
+        </dependency>
+    </dependencies>
 
 </project>

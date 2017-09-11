@@ -10,13 +10,20 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>outspace</artifactId>
-    <dependencies>
-        <dependency>
-            <groupId>hithop-spring</groupId>
-            <artifactId>common</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-    </dependencies>
 
+    <build>
+        <resources>
+            <!--common start-->
+            <resource>
+                <directory>../../engine/src/main/resources</directory>
+            </resource>
+            <!--common end-->
+            <!--engine start-->
+            <resource>
+                <directory>../../common/src/main/resources</directory>
+            </resource>
+            <!--engine end-->
+        </resources>
+    </build>
 
 </project>

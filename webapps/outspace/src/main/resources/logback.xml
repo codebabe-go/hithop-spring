@@ -5,7 +5,7 @@
     <property resource="properties/application.properties"/>
 
     <appender name="file" class="ch.qos.logback.core.FileAppender">
-        <file>logs/${app.name}/server.log</file>
+        <file>/tmp/logs/${app.name}/server.log</file>
         <layout class="ch.qos.logback.classic.PatternLayout">
             <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
         </layout>

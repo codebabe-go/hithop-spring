@@ -1,6 +1,9 @@
 # hithop-spring
 学习spring过程中的打怪升级, 期间会设计到`分布式`, `大数据`, `rpc`...
 
+## 介绍
+1. 所有的单元测试用的都是junit & mockito
+
 ## 目的
 1. 学习spring在工程项目中的应用
 2. 了解用maven构建一个较大规模java项目的过程
