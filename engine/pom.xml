@@ -12,7 +12,12 @@
     <artifactId>engine</artifactId>
 
     <dependencies>
-        <!--zk 客户端相关-->
+        <dependency>
+            <groupId>hithop-spring</groupId>
+            <artifactId>common</artifactId>
+            <version>${hithop.version}</version>
+        </dependency>
+        <!--zk client-->
         <dependency>
             <groupId>org.apache.curator</groupId>
             <artifactId>curator-client</artifactId>

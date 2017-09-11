@@ -1,4 +1,6 @@
-package me.codebabe.common.config;
+package me.codebabe.engine.config;
+
+import me.codebabe.common.exception.config.ConfigException;
 
 /**
  * author: code.babe
@@ -23,6 +25,7 @@ public interface ConfigLoader {
 
     /**
      * 获取值
+     * TODO: 这里需要权衡是否要抛出configException异常
      *
      * @param key
      * @return
@@ -35,5 +38,7 @@ public interface ConfigLoader {
      * @return
      */
     Integer getOrder();
+
+    void check() throws ConfigException;
 
 }

@@ -3,6 +3,8 @@ package me.codebabe.common.response;
 /**
  * author: code.babe
  * date: 2017-09-09 21:24
+ *
+ * 通常用于controller的响应层
  */
 public class Response {
 
