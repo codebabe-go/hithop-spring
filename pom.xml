@@ -19,8 +19,9 @@
 
     <properties>
         <spring.version>4.2.9.RELEASE</spring.version>
+        <spring.boot.version>1.3.6.RELEASE</spring.boot.version>
         <fastjson.version>1.2.5</fastjson.version>
-
+        <logback.version>1.1.2</logback.version>
 
         <!--engine-->
         <curator.version>2.9.1</curator.version>
@@ -170,6 +171,29 @@
         </dependency>
         <!--spring-framework end-->
 
+        <!--spring boot start-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
+        <!--spring boot end-->
+
         <!--fastjson start-->
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -177,6 +201,14 @@
             <version>${fastjson.version}</version>
         </dependency>
         <!--fastjson end-->
+
+        <!--logback start-->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+        <!--logback end-->
     </dependencies>
 
 </project>

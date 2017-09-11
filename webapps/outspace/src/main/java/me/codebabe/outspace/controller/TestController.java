@@ -1,4 +1,4 @@
-package me.codebbe.outspace.controller;
+package me.codebabe.outspace.controller;
 
 /**
  * author: code.babe
