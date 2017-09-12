@@ -11,7 +11,6 @@ import org.apache.zookeeper.CreateMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
@@ -48,7 +47,7 @@ public class CBZKHolder {
                     Properties props = new Properties();
                     ClassLoader loader = CBZKHolder.class.getClassLoader();
                     try {
-                        props.load(new InputStreamReader(loader.getResourceAsStream("config/zookeeper.properties"), "UTF-8"));
+                        props.load(new InputStreamReader(loader.getResourceAsStream("properties/zookeeper.properties"), "UTF-8"));
                         String connectionString = props.getProperty("zk.address", "127.0.0.1:2881");
                         String namespace = props.getProperty("zk.namespace", "");
                         // 会话超时时间

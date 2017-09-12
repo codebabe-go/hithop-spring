@@ -3,6 +3,7 @@ package me.codebabe.outspace.startup;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
@@ -13,6 +14,9 @@ import org.springframework.scheduling.annotation.EnableAsync;
 //@ImportResource({
 //})
 @EnableAsync
+@ImportResource({
+        "classpath:config/hithop-outspace.xml",
+})
 @ComponentScan(basePackages = "me.codebabe.outspace")
 public class Application {
 
