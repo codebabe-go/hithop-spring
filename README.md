@@ -1,8 +1,14 @@
 # hithop-spring
-学习spring过程中的打怪升级, 期间会设计到`分布式`, `大数据`, `rpc`...
+学习spring过程中的打怪升级, 期间会设计到`分布式`, `大数据`, `rpc`, `消息队列`...
 
 ## 介绍
 1. 所有的单元测试用的都是junit & mockito
+2. 常见的分布式系统搭建
+    - webapp: nginx
+    - rpc(dubbo): zk
+    - mq: 切分队列进行下发
+    - local server: 自定义规则下发, 如corpId
+    * 后三个都是借助zk, 各自注册, zk上存储服务器信息, 然后让zk去下发    
 
 ## 目的
 1. 学习spring在工程项目中的应用

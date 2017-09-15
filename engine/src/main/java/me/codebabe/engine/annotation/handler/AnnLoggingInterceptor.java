@@ -15,7 +15,7 @@ import java.lang.reflect.Parameter;
  * date: 2017-09-12 19:52
  *
  * 动态代理来实现注解日志
- * TODO: 这里可以通过线程池去消费异步打出日志
+ * TODO: 这里可以通过线程池去消费异步打出日志, 同时进行接口调用的日志分析
  */
 public class AnnLoggingInterceptor implements MethodInterceptor {
 

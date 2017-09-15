@@ -1,6 +1,9 @@
 package me.codebabe.engine.config;
 
 import me.codebabe.common.exception.config.ConfigException;
+import me.codebabe.common.exception.config.ConfigNotExistException;
+
+import java.util.List;
 
 /**
  * author: code.babe
@@ -25,20 +28,25 @@ public interface ConfigLoader {
 
     /**
      * 获取值
-     * TODO: 这里需要权衡是否要抛出configException异常
      *
      * @param key
      * @return
      */
-    Object getValue(String key);
+    Object getValue(String key) throws ConfigNotExistException;
 
     /**
-     * 读取值的优先级, 越小表示优先级越高, 0是最高权限
+     * 读取值的优先级, 越小表示优先级越高, 0是最高优先级, 越灵活, 优先级越高
      *
      * @return
      */
     Integer getOrder();
 
     void check() throws ConfigException;
+
+    /**
+     *
+     * @return 所有的key
+     */
+    List<String> getAllKeys();
 
 }
