@@ -4,7 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
-import org.apache.curator.framework.state.ConnectionState;
+import org.apache.curator.framework.recipes.cache.NodeCache;
+import org.apache.curator.framework.recipes.cache.NodeCacheListener;
+import org.apache.curator.framework.recipes.cache.PathChildrenCache;
+import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
 import org.apache.curator.framework.state.ConnectionStateListener;
 import org.apache.curator.retry.RetryNTimes;
 import org.apache.zookeeper.CreateMode;
@@ -69,12 +72,7 @@ public class CBZKHolder {
 
                         holder.client.start();
 
-                        holder.addConnectionStateListener(new ConnectionStateListener() {
-                            @Override
-                            public void stateChanged(CuratorFramework client, ConnectionState newState) {
-                                logger.warn("Zk connection state changed, new state:" + newState.name());
-                            }
-                        });
+                        holder.addConnectionStateListener((client, newState) -> logger.info("Zk connection state changed, new state: " + newState.name()));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -84,6 +82,13 @@ public class CBZKHolder {
         return holder;
     }
 
+    public void createPersistent(String path) throws Exception {
+        create(path, CreateMode.PERSISTENT, null);
+    }
+
+    public void createEphemeral(String path) throws Exception {
+        create(path, CreateMode.EPHEMERAL, null);
+    }
 
     public void createPersistent(String path, Object data) throws Exception {
         create(path, CreateMode.PERSISTENT, data);
@@ -102,7 +107,12 @@ public class CBZKHolder {
      * @throws Exception
      */
     public void create(String path, CreateMode mode, Object data) throws Exception {
-        client.create().creatingParentsIfNeeded().withMode(mode).forPath(path, JSON.toJSONBytes(data, features));
+        if (data != null) {
+            client.create().creatingParentsIfNeeded().withMode(mode).forPath(path, JSON.toJSONBytes(data, features));
+        } else {
+            client.create().creatingParentsIfNeeded().withMode(mode).forPath(path);
+        }
+
     }
 
     public boolean isExist(String path) throws Exception {
@@ -134,14 +144,73 @@ public class CBZKHolder {
         return JSON.parseObject(data, tClass);
     }
 
+    public PathChildrenCache getPathChildCache(String path) throws Exception {
+        return getPathChildCache(path, PathChildrenCache.StartMode.BUILD_INITIAL_CACHE, null);
+    }
+
+    public PathChildrenCache getPathChildCache(String path, PathChildrenCacheListener listener) throws Exception {
+        return getPathChildCache(path, PathChildrenCache.StartMode.BUILD_INITIAL_CACHE, listener);
+    }
+
     /**
-     * 删除节点
+     * 对路径注册监听事件, 对子节点(一级)进行监听, 通常用于多机分布的节点注册
+     * <p>每个监控操作不是实时, 注意需要一定的延时</p>
+     * <p>对原始zkClient的watcher进行了封装, 防止重复注册</p>
+     *
+     * @param path 监听的路径
+     * @param startMode 开始模式
+     * @param listener 监听者
+     * @return
+     * @throws Exception
+     */
+    public PathChildrenCache getPathChildCache(String path, PathChildrenCache.StartMode startMode, PathChildrenCacheListener listener) throws Exception {
+        PathChildrenCache cache = new PathChildrenCache(client, path, true);
+        cache.start(startMode); // 不进行复用, 直接rebuild
+        if (listener != null) {
+            cache.getListenable().addListener(listener);
+        }
+        return cache;
+    }
+
+    public NodeCache getNodeCache(String path) throws Exception {
+        return getNodeCache(path, null);
+    }
+
+    /**
+     * 注册监听, 对该节点进行监听
+     * <p>对原始zkClient的watcher进行了封装, 防止重复注册</p>
+     *
+     * @param path
+     * @param listener
+     * @return
+     */
+    public NodeCache getNodeCache(String path, NodeCacheListener listener) throws Exception {
+        NodeCache cache = new NodeCache(client, path);
+        if (listener != null) {
+            cache.getListenable().addListener(listener);
+        }
+        cache.start(true);
+        return cache;
+    }
+
+    /**
+     * 删除节点, 这里删除的都是永久节点
      *
      * @param path
      * @throws Exception
      */
     public void deleteNode(String path) throws Exception {
         client.delete().forPath(path);
+    }
+
+    /**
+     * 删除一个父节点, 子节点也跟着删除
+     *
+     * @param path
+     * @throws Exception
+     */
+    public void deleteRNode(String path) throws Exception {
+        client.delete().deletingChildrenIfNeeded().forPath(path);
     }
 
     public void addConnectionStateListener(ConnectionStateListener listener) {
