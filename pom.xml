@@ -28,6 +28,7 @@
         <mockito.version>1.9.5</mockito.version>
         <junit.version>4.11</junit.version>
         <google.guava.version>19.0</google.guava.version>
+        <kafka.version>0.11.0.1</kafka.version>
 
         <!--engine-->
         <curator.version>2.9.1</curator.version>

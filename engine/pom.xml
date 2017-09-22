@@ -17,7 +17,7 @@
             <artifactId>common</artifactId>
             <version>${hithop.version}</version>
         </dependency>
-        <!--zk client-->
+        <!--zk client start-->
         <dependency>
             <groupId>org.apache.curator</groupId>
             <artifactId>curator-client</artifactId>
@@ -44,6 +44,15 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!--zk client end-->
+
+        <!--kafka start-->
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>${kafka.version}</version>
+        </dependency>
+        <!--kafka end-->
     </dependencies>
 
 </project>

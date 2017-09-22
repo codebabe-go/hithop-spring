@@ -8,7 +8,7 @@ import org.junit.Test;
  * author: code.babe
  * date: 2017-09-11 14:31
  */
-public class TestZKHolder {
+public class ZKHolderTest {
 
     @Test
     public void testCRUD() {
