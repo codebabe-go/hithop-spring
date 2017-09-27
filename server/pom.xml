@@ -13,7 +13,17 @@
     <packaging>pom</packaging>
     <modules>
         <module>cli</module>
+        <module>mqc</module>
     </modules>
 
+    <dependencies>
+        <!--kafka start-->
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>${kafka.version}</version>
+        </dependency>
+        <!--kafka end-->
+    </dependencies>
 
 </project>

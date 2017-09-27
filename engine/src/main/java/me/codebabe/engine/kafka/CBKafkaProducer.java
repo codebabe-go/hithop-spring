@@ -1,8 +1,6 @@
 package me.codebabe.engine.kafka;
 
-import org.apache.kafka.clients.producer.Callback;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +12,8 @@ import java.util.concurrent.Future;
 /**
  * author: code.babe
  * date: 2017-09-16 16:57
+ *
+ * kafka消费者单例模式
  */
 public class CBKafkaProducer {
 
@@ -22,7 +22,7 @@ public class CBKafkaProducer {
     private CBKafkaProducer() {
     }
 
-    private KafkaProducer wetNurse; // 奶妈, 生产者
+    private Producer<String, Object> wetNurse; // 奶妈, 生产者
     private static CBKafkaProducer instance;
 
     public static CBKafkaProducer getInstance() {
@@ -33,7 +33,9 @@ public class CBKafkaProducer {
                     try {
                         prop.load(new InputStreamReader(CBKafkaProducer.class.getClassLoader().getResourceAsStream("properties/kafka-producer.properties")));
                         instance = new CBKafkaProducer();
-                        instance.wetNurse = new KafkaProducer(prop);
+                        instance.wetNurse = new KafkaProducer<>(prop);
+
+                        logger.info(String.format("acquire kafka producer instance in %d", System.currentTimeMillis()));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -44,11 +46,15 @@ public class CBKafkaProducer {
         return instance;
     }
 
-    public <K, V> Future send(ProducerRecord<K, V> record) {
+    public Future<RecordMetadata> send(String topic, String key, Object value) {
+        return wetNurse.send(new ProducerRecord<String, Object>(topic, key, value), null);
+    }
+
+    public Future<RecordMetadata> send(ProducerRecord<String, Object> record) {
         return wetNurse.send(record, null);
     }
 
-    public <K, V> Future send(ProducerRecord<K, V> record, Callback callback) {
+    public Future<RecordMetadata> send(ProducerRecord<String, Object> record, Callback callback) {
         return wetNurse.send(record, callback);
     }
 
