@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!--每个项目都要配置一个logback.xml文件-->
+    <property resource="properties/application.properties"/>
+
+    <appender name="file" class="ch.qos.logback.core.FileAppender">
+        <file>/tmp/logs/${app.name}/server.log</file>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+        </layout>
+    </appender>
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d %-5p %t %X %c{1}:%L - %m%n</pattern>
+        </encoder>
+    </appender>
+    <!-- 日志级别可以自己设置-->
+    <logger name="me.codebabe" level="INFO"/>
+    <root level="INFO">
+        <appender-ref ref="file" />
+        <appender-ref ref="console" />
+    </root>
+</configuration>
