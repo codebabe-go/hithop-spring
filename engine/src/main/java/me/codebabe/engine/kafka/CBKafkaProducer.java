@@ -22,7 +22,7 @@ public class CBKafkaProducer {
     private CBKafkaProducer() {
     }
 
-    private Producer<String, Object> wetNurse; // 奶妈, 生产者
+    private Producer<String, byte[]> wetNurse; // 奶妈, 生产者
     private static CBKafkaProducer instance;
 
     public static CBKafkaProducer getInstance() {
@@ -46,15 +46,15 @@ public class CBKafkaProducer {
         return instance;
     }
 
-    public Future<RecordMetadata> send(String topic, String key, Object value) {
-        return wetNurse.send(new ProducerRecord<String, Object>(topic, key, value), null);
+    public Future<RecordMetadata> send(String topic, String key, byte[] value) {
+        return wetNurse.send(new ProducerRecord<>(topic, key, value), null);
     }
 
-    public Future<RecordMetadata> send(ProducerRecord<String, Object> record) {
+    public Future<RecordMetadata> send(ProducerRecord<String, byte[]> record) {
         return wetNurse.send(record, null);
     }
 
-    public Future<RecordMetadata> send(ProducerRecord<String, Object> record, Callback callback) {
+    public Future<RecordMetadata> send(ProducerRecord<String, byte[]> record, Callback callback) {
         return wetNurse.send(record, callback);
     }
 
