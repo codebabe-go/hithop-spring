@@ -8,6 +8,14 @@ package me.codebabe.server.mqc.consumer;
  */
 public class ConsumerQueue {
 
+    public ConsumerQueue() {
+    }
+
+    public ConsumerQueue(int partition, String name) {
+        this.partition = partition;
+        this.name = name;
+    }
+
     private int partition; // 分区
     private String name; // 队列名字, 这个名字可能是kafka的topic, rmq的exchange等
 

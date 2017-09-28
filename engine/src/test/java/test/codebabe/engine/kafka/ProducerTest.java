@@ -14,7 +14,7 @@ public class ProducerTest {
 
     @Test
     public void testSend() throws ExecutionException, InterruptedException {
-        System.out.println(CBKafkaProducer.getInstance().send(new ProducerRecord<>("test", "key", "hello")).get().toString());
+        System.out.println(CBKafkaProducer.getInstance().send(new ProducerRecord<>("test", "key", "hello kafka".getBytes())).get().toString());
     }
 
 }

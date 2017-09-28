@@ -8,8 +8,6 @@ import me.codebabe.server.mqc.processor.MessageProcessor;
  */
 public interface MQCConsumer {
 
-    void init();
-
     /**
      * 通常来说就是轮询去读消息
      */

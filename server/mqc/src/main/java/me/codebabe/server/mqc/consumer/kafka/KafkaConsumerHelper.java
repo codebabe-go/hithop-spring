@@ -43,8 +43,7 @@ public class KafkaConsumerHelper implements MQCConsumer {
     private int threadSize = 0;
     private KafkaConsumer<String, byte[]> kafkaConsumer;
 
-    @Override
-    public void init() {
+    private void init() {
         Properties props = new Properties();
         List<String> topics = new ArrayList<>();
         try {
@@ -56,8 +55,8 @@ public class KafkaConsumerHelper implements MQCConsumer {
             props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true);
             props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
             props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ByteArrayDeserializer.class);
+            props.put(ConsumerConfig.GROUP_ID_CONFIG, "1");
             topics.add("test"); // 默认给一个test topic
-//            props.put(ConsumerConfig.GROUP_ID_CONFIG, "1");
         }
         kafkaConsumer = new KafkaConsumer<>(props);
         kafkaConsumer.subscribe(topics); // 订阅test
@@ -79,6 +78,7 @@ public class KafkaConsumerHelper implements MQCConsumer {
                     shutdown();
                     break;
                 }
+                Thread.sleep(1000); // 每次都休眠1秒, test
             } catch (Exception e) {
                 logger.error(e.getMessage(), e);
             }
