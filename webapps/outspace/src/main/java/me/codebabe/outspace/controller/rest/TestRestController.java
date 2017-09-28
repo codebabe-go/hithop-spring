@@ -2,6 +2,8 @@ package me.codebabe.outspace.controller.rest;
 
 import me.codebabe.common.response.Response;
 import me.codebabe.engine.annotation.LogLevel;
+import me.codebabe.engine.annotation.Logging;
+import me.codebabe.engine.kafka.CBKafkaProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(value = "/api/outspace/test")
+@Logging
 public class TestRestController {
 
     private static final Logger logger = LoggerFactory.getLogger(TestRestController.class);
@@ -20,45 +23,9 @@ public class TestRestController {
     @LogLevel(level = "info")
     @RequestMapping(value = "/hello")
     public Response test() {
-        logger.info("[test]hello {}", "world");
-        // 创建路径
-//        try {
-//            if (!CBZKHolder.getInstance().isExist("/persistent")) {
-//                CBZKHolder.getInstance().createPersistent("/persistent", "directory");
-//            }
-//            System.out.println(CBZKHolder.getInstance().getData("/persistent", String.class));
-//
-//            // 设值
-//            if (CBZKHolder.getInstance().isExist("/persistent")) {
-//                CBZKHolder.getInstance().setData("/persistent", "data");
-//            }
-//            System.out.println(CBZKHolder.getInstance().getData("/persistent", String.class));
-//        } catch (Exception e) {
-//            logger.error(e.getMessage(), e);
-//        }
-
-        return new Response("xixi");
-    }
-
-    @RequestMapping(value = "/tt")
-    public Response tt() {
-        logger.info("[test]hello {}", "world");
-        // 创建路径
-//        try {
-//            if (!CBZKHolder.getInstance().isExist("/persistent")) {
-//                CBZKHolder.getInstance().createPersistent("/persistent", "directory");
-//            }
-//            System.out.println(CBZKHolder.getInstance().getData("/persistent", String.class));
-//
-//            // 设值
-//            if (CBZKHolder.getInstance().isExist("/persistent")) {
-//                CBZKHolder.getInstance().setData("/persistent", "data");
-//            }
-//            System.out.println(CBZKHolder.getInstance().getData("/persistent", String.class));
-//        } catch (Exception e) {
-//            logger.error(e.getMessage(), e);
-//        }
-
+        String welcome = "hello world";
+        logger.info("[test]{}", welcome);
+        CBKafkaProducer.getInstance().send("test", "key", welcome.getBytes());
         return new Response("xixi");
     }
 

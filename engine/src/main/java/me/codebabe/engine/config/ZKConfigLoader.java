@@ -24,8 +24,11 @@ public class ZKConfigLoader implements ConfigLoader {
     }
 
     public ZKConfigLoader(String moduleName) {
-        // 这个要求要以'/'开头
-        this.moduleName = moduleName;
+        if (!moduleName.startsWith("/")) { // 模块如果没有用/开头, 默认给一个好了, 权宜之计
+            this.moduleName = "/".concat(moduleName);
+        } else {
+            this.moduleName = moduleName;
+        }
         this.keySet = new ConcurrentSkipListSet<>();
         init();
     }

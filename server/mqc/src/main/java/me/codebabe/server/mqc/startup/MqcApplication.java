@@ -1,5 +1,8 @@
 package me.codebabe.server.mqc.startup;
 
+import me.codebabe.server.mqc.consumer.ConsumerQueue;
+import me.codebabe.server.mqc.consumer.kafka.KafkaConsumerHelper;
+import me.codebabe.server.mqc.processor.PrintProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.Banner;
@@ -8,7 +11,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ImportResource;
-import org.springframework.core.env.StandardEnvironment;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 import java.io.IOException;
@@ -24,15 +26,15 @@ import java.util.Properties;
 @ImportResource({
 })
 @ComponentScan(basePackages = "me.codebabe.server.mqc")
-public class Application implements CommandLineRunner {
+public class MqcApplication implements CommandLineRunner {
 
-    private static final Logger logger = LoggerFactory.getLogger(Application.class);
+    private static final Logger logger = LoggerFactory.getLogger(MqcApplication.class);
 
     public static void main(String[] args) {
-        SpringApplication application = new SpringApplication(Application.class);
+        SpringApplication application = new SpringApplication(MqcApplication.class);
         Properties props = new Properties();
         try {
-            props.load(new InputStreamReader(Application.class.getClassLoader().getResourceAsStream("properties/application.properties"), "UTF-8"));
+            props.load(new InputStreamReader(MqcApplication.class.getClassLoader().getResourceAsStream("properties/application.properties"), "UTF-8"));
             application.setDefaultProperties(props);
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
@@ -43,8 +45,15 @@ public class Application implements CommandLineRunner {
         application.run(args);
     }
 
+    // 自定义守护进程, 消费者
     @Override
     public void run(String... args) throws Exception {
-        Thread.currentThread().join();
+        KafkaConsumerHelper helper = new KafkaConsumerHelper();
+        helper.register(new ConsumerQueue(1, "test"), new PrintProcessor());
+        helper.start();
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            helper.shutdown();
+            logger.info("shutdown finish");
+        }));
     }
 }
