@@ -11,6 +11,15 @@
 
     <artifactId>engine</artifactId>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>hithop-spring</groupId>
@@ -53,6 +62,14 @@
             <version>${kafka.version}</version>
         </dependency>
         <!--kafka end-->
+
+        <!--spark start-->
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_2.11</artifactId>
+            <version>${spark.version}</version>
+        </dependency>
+        <!--spark end-->
     </dependencies>
 
 </project>

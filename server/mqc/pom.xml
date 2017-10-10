@@ -11,5 +11,29 @@
 
     <artifactId>mqc</artifactId>
 
+    <build>
+        <resources>
+            <!--common start-->
+            <resource>
+                <directory>../../engine/src/main/resources</directory>
+            </resource>
+            <!--common end-->
+            <!--engine start-->
+            <resource>
+                <directory>../../common/src/main/resources</directory>
+            </resource>
+            <!--engine end-->
+        </resources>
+    </build>
+
+    <dependencies>
+        <!--spark start-->
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_2.11</artifactId>
+            <version>${spark.version}</version>
+        </dependency>
+        <!--spark end-->
+    </dependencies>
 
 </project>
