@@ -1,5 +1,7 @@
 package test.codebabe.server.mqc.spark
 
+import me.codebabe.engine.spark.SparkEngine
+
 import scala.math.random
 
 /**
