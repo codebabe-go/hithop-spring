@@ -73,6 +73,10 @@
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-log4j12</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.apache.hadoop</groupId>
+                    <artifactId>hadoop-client</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -81,6 +85,19 @@
             <version>${spark.version}</version>
         </dependency>
         <!--spark end-->
+
+        <!--hbase start-->
+        <!--<dependency>-->
+            <!--<groupId>org.apache.hadoop</groupId>-->
+            <!--<artifactId>hadoop-core</artifactId>-->
+            <!--<version>${hadoop.version}</version>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-client</artifactId>
+            <version>${hbase.version}</version>
+        </dependency>
+        <!--hbase end-->
     </dependencies>
 
 </project>
