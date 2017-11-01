@@ -1,6 +1,7 @@
 package test.codebabe.engine.hbase;
 
 import com.alibaba.fastjson.JSON;
+import me.codebabe.engine.hbase.HBaseModel;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.*;
@@ -14,6 +15,8 @@ import java.io.IOException;
  * date: 2017-10-27 17:05
  */
 public class HBaseTest {
+
+    private HBaseModelDemo demo = new HBaseModelDemo();
 
     @Test
     public void testPut() throws IOException {
@@ -39,9 +42,23 @@ public class HBaseTest {
     }
 
     @Test
-    public void testHBaseModel() {
-        HBaseModelDemo demo = new HBaseModelDemo();
+    public void testHBaseModelGet() {
         System.out.println(JSON.toJSONString(demo.get()));
+        demo.delete();
+    }
+
+    @Test
+    public void testHBaseModelDelete() {
+        demo.delete();
+    }
+
+    @Test
+    public void testHBaseModelPut() {
+        HBaseModelDemo putDemo = new HBaseModelDemo();
+        putDemo.setQual1("111");
+        putDemo.setQual2("222");
+        HBaseModel ret = putDemo.put();
+        System.out.println(ret == null);
     }
 
 }

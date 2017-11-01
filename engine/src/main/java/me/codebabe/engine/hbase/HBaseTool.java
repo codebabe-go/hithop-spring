@@ -1,5 +1,7 @@
 package me.codebabe.engine.hbase;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.*;
@@ -9,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -75,9 +78,35 @@ public class HBaseTool {
                 ret = get(model);
             }
             Put put = new Put(Bytes.toBytes(rowkey));
-//            put.add();
+            JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(model));
+            Class<?> clz = model.getClass();
+            for (String qualifier : jsonObject.keySet()) {
+                try {
+                    Field field = clz.getDeclaredField(qualifier);
+                    Class<?> fieldType = field.getType();
+                    if (Long.class.equals(fieldType)) {
+                        Long value = jsonObject.getLong(qualifier);
+                        put.add(Bytes.toBytes(model.rowkey()), Bytes.toBytes(qualifier), Bytes.toBytes(value));
+                    } else if (Integer.class.equals(fieldType)) {
+                        Integer value = jsonObject.getInteger(qualifier);
+                        put.add(Bytes.toBytes(model.rowkey()), Bytes.toBytes(qualifier), Bytes.toBytes(value));
+                    } else if (Short.class.equals(fieldType)) {
+                        Short value = jsonObject.getShort(qualifier);
+                        put.add(Bytes.toBytes(model.rowkey()), Bytes.toBytes(qualifier), Bytes.toBytes(value));
+                    } else if (Double.class.equals(fieldType)) {
+                        Double value = jsonObject.getDouble(qualifier);
+                        put.add(Bytes.toBytes(model.rowkey()), Bytes.toBytes(qualifier), Bytes.toBytes(value));
+                    } else { // 默认都是string类型了
+                        String value = jsonObject.getString(qualifier);
+                        put.add(Bytes.toBytes(model.getColumnFamily()), Bytes.toBytes(qualifier), Bytes.toBytes(value));
+                    }
+                }  catch (NoSuchFieldException e) {
+                    logger.info("no such field, filed = {}", qualifier, e);
+                }
+            }
             htable.put(put);
         } catch (IOException e) {
+            e.printStackTrace();
             logger.error("hbase put a row error, rowkey = {}", model.rowkey(), e);
         }
         return ret;
