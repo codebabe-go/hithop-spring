@@ -44,7 +44,6 @@ public class HBaseTest {
     @Test
     public void testHBaseModelGet() {
         System.out.println(JSON.toJSONString(demo.get()));
-        demo.delete();
     }
 
     @Test
