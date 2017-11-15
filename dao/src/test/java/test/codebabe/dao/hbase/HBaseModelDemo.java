@@ -1,6 +1,6 @@
 package test.codebabe.dao.hbase;
 
-import me.codebabe.dao.hbase.AbsHBaseModel;
+import me.codebabe.dao.hbase.model.AbsHBaseModel;
 
 /**
  * author: code.babe

@@ -24,6 +24,18 @@
             <version>${hbase.version}</version>
         </dependency>
         <!--hbase end-->
+        <!--es start-->
+        <dependency>
+            <groupId>org.elasticsearch</groupId>
+            <artifactId>elasticsearch</artifactId>
+            <version>${es.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>transport</artifactId>
+            <version>${es.version}</version>
+        </dependency>
+        <!--es end-->
     </dependencies>
 
 </project>

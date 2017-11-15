@@ -1,4 +1,4 @@
-package me.codebabe.dao.hbase;
+package me.codebabe.dao.hbase.model;
 
 import me.codebabe.dao.DAO;
 import org.apache.hadoop.hbase.client.Result;

@@ -1,6 +1,7 @@
-package me.codebabe.dao.hbase;
+package me.codebabe.dao.hbase.model;
 
 import me.codebabe.common.utils.StringUtils;
+import me.codebabe.dao.hbase.HBaseTool;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.util.Bytes;
 

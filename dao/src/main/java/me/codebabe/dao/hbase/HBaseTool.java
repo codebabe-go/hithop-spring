@@ -2,6 +2,7 @@ package me.codebabe.dao.hbase;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import me.codebabe.dao.hbase.model.HBaseModel;
 import me.codebabe.dao.hbase.utils.HBaseHelper;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
