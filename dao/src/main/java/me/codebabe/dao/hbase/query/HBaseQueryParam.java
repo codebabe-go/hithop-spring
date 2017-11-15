@@ -1,4 +1,4 @@
-package me.codebabe.engine.hbase.query;
+package me.codebabe.dao.hbase.query;
 
 /**
  * author: code.babe

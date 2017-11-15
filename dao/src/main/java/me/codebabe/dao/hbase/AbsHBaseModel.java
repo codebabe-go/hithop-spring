@@ -1,4 +1,4 @@
-package me.codebabe.engine.hbase;
+package me.codebabe.dao.hbase;
 
 import me.codebabe.common.utils.StringUtils;
 import org.apache.hadoop.hbase.client.Result;
@@ -33,7 +33,7 @@ public abstract class AbsHBaseModel implements HBaseModel {
 
     @Override
     public HBaseModel parse(Result result) {
-        Map<byte[], byte[]> fieldMap = result.getFamilyMap(Bytes.toBytes(getColumnFamily()));
+        Map<byte[], byte[]> fieldMap = result.getFamilyMap(Bytes.toBytes(columnFamily()));
         if (fieldMap != null) {
             Class<?> thisClz = this.getClass();
             // 线程安全

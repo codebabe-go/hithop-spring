@@ -85,19 +85,6 @@
             <version>${spark.version}</version>
         </dependency>
         <!--spark end-->
-
-        <!--hbase start-->
-        <!--<dependency>-->
-            <!--<groupId>org.apache.hadoop</groupId>-->
-            <!--<artifactId>hadoop-core</artifactId>-->
-            <!--<version>${hadoop.version}</version>-->
-        <!--</dependency>-->
-        <dependency>
-            <groupId>org.apache.hbase</groupId>
-            <artifactId>hbase-client</artifactId>
-            <version>${hbase.version}</version>
-        </dependency>
-        <!--hbase end-->
     </dependencies>
 
 </project>

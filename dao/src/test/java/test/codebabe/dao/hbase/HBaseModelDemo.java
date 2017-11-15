@@ -1,6 +1,6 @@
-package test.codebabe.engine.hbase;
+package test.codebabe.dao.hbase;
 
-import me.codebabe.engine.hbase.AbsHBaseModel;
+import me.codebabe.dao.hbase.AbsHBaseModel;
 
 /**
  * author: code.babe
@@ -17,12 +17,12 @@ public class HBaseModelDemo extends AbsHBaseModel {
     }
 
     @Override
-    public String getTable() {
+    public String table() {
         return "testtable";
     }
 
     @Override
-    public String getColumnFamily() {
+    public String columnFamily() {
         return "colfam1";
     }
 

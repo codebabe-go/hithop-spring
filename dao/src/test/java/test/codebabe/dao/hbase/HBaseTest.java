@@ -1,7 +1,7 @@
-package test.codebabe.engine.hbase;
+package test.codebabe.dao.hbase;
 
 import com.alibaba.fastjson.JSON;
-import me.codebabe.engine.hbase.HBaseModel;
+import me.codebabe.dao.hbase.HBaseModel;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.*;

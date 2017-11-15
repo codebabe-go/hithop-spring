@@ -1,5 +1,6 @@
-package me.codebabe.engine.hbase;
+package me.codebabe.dao.hbase;
 
+import me.codebabe.dao.DAO;
 import org.apache.hadoop.hbase.client.Result;
 
 import java.io.Serializable;
@@ -10,7 +11,7 @@ import java.io.Serializable;
  *
  * 每个rowkey对应的实体类, 相当于一条记录
  */
-public interface HBaseModel extends Serializable {
+public interface HBaseModel extends Serializable, DAO {
 
     /**
      * @return 自定义一个rowkey
@@ -36,15 +37,17 @@ public interface HBaseModel extends Serializable {
      * 获取hbase表名
      * @return
      */
-    String getTable();
+    String table();
 
-    String getColumnFamily();
+    String columnFamily();
 
     /**
      * 解析hbase获取的result为对象实例, 同时赋值该对象
      * @param result {@link #get()}获取的结果
      * @return
+     * @deprecated 解析过程可以单独拎出来放在一个util中进行
      */
+    @Deprecated
     HBaseModel parse(Result result);
 
 }

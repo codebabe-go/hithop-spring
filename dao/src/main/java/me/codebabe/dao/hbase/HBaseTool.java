@@ -1,17 +1,18 @@
-package me.codebabe.engine.hbase;
+package me.codebabe.dao.hbase;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import me.codebabe.dao.hbase.utils.HBaseHelper;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
+import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
-import org.apache.hadoop.security.UserGroupInformation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -23,7 +24,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class HBaseTool {
 
-    private static final Logger logger = LoggerFactory.getLogger(HBaseTool.class);
+    private static final Logger logger = Logger.getLogger(HBaseTool.class);
 
     private HBaseTool() {
         reload();
@@ -32,7 +33,7 @@ public class HBaseTool {
 
     private static HBaseTool tool;
     private Configuration conf;
-    private HConnection conn;
+    private Connection conn;
 
     public static HBaseTool getTool() {
         if (tool == null) {
@@ -58,12 +59,12 @@ public class HBaseTool {
 
     public HBaseModel get(HBaseModel model) {
         try {
-            HTableInterface htable = getTable(model);
+            Table htable = getTable(model);
             Get get = new Get(Bytes.toBytes(model.rowkey()));
             Result result = htable.get(get);
-            return model.parse(result);
+            return HBaseHelper.parse(result, model);
         } catch (IOException e) {
-            logger.error("hbase get a row error, rowkey = {}", model.rowkey(), e);
+            logger.error(String.format("hbase get a row error, rowkey = %s", model.rowkey()), e);
         }
         return null;
     }
@@ -71,11 +72,11 @@ public class HBaseTool {
     public HBaseModel put(HBaseModel model) {
         HBaseModel ret = null;
         try {
-            HTableInterface htable = getTable(model);
+            Table htable = getTable(model);
             String rowkey = model.rowkey();
             Get get = new Get(Bytes.toBytes(rowkey));
             if (htable.exists(get)) {
-                ret = get(model);
+//                ret = get(model);
             }
             Put put = new Put(Bytes.toBytes(rowkey));
             JSONObject jsonObject = JSONObject.parseObject(JSON.toJSONString(model));
@@ -86,94 +87,102 @@ public class HBaseTool {
                     Class<?> fieldType = field.getType();
                     if (Long.class.equals(fieldType)) {
                         Long value = jsonObject.getLong(qualifier);
-                        put.add(Bytes.toBytes(model.rowkey()), Bytes.toBytes(qualifier), Bytes.toBytes(value));
+                        put.addColumn(Bytes.toBytes(model.columnFamily()), Bytes.toBytes(qualifier), Bytes.toBytes(value));
                     } else if (Integer.class.equals(fieldType)) {
                         Integer value = jsonObject.getInteger(qualifier);
-                        put.add(Bytes.toBytes(model.rowkey()), Bytes.toBytes(qualifier), Bytes.toBytes(value));
+                        put.addColumn(Bytes.toBytes(model.columnFamily()), Bytes.toBytes(qualifier), Bytes.toBytes(value));
                     } else if (Short.class.equals(fieldType)) {
                         Short value = jsonObject.getShort(qualifier);
-                        put.add(Bytes.toBytes(model.rowkey()), Bytes.toBytes(qualifier), Bytes.toBytes(value));
+                        put.addColumn(Bytes.toBytes(model.columnFamily()), Bytes.toBytes(qualifier), Bytes.toBytes(value));
                     } else if (Double.class.equals(fieldType)) {
                         Double value = jsonObject.getDouble(qualifier);
-                        put.add(Bytes.toBytes(model.rowkey()), Bytes.toBytes(qualifier), Bytes.toBytes(value));
+                        put.addColumn(Bytes.toBytes(model.columnFamily()), Bytes.toBytes(qualifier), Bytes.toBytes(value));
                     } else { // 默认都是string类型了
                         String value = jsonObject.getString(qualifier);
-                        put.add(Bytes.toBytes(model.getColumnFamily()), Bytes.toBytes(qualifier), Bytes.toBytes(value));
+                        put.addColumn(Bytes.toBytes(model.columnFamily()), Bytes.toBytes(qualifier), Bytes.toBytes(value));
                     }
-                }  catch (NoSuchFieldException e) {
-                    logger.info("no such field, filed = {}", qualifier, e);
+                }  catch (NoSuchFieldException ignore) {
+//                    logger.info(String.format("no such field, filed = %s", qualifier), e);
                 }
             }
             htable.put(put);
         } catch (IOException e) {
             e.printStackTrace();
-            logger.error("hbase put a row error, rowkey = {}", model.rowkey(), e);
+            logger.error(String.format("hbase put a row error, rowkey = %s", model.rowkey()), e);
         }
         return ret;
     }
 
     public boolean delete(HBaseModel model) {
         try {
-            HTableInterface htable = getTable(model);
+            Table htable = getTable(model);
             Delete delete = new Delete(Bytes.toBytes(model.rowkey()));
             htable.delete(delete);
             return true;
         } catch (IOException e) {
-            logger.error("hbase delete a row error, rowkey = {}", model.rowkey(), e);
+            logger.error(String.format("hbase delete a row error, rowkey = %s", model.rowkey()), e);
         }
         return false;
     }
 
-    public List<HBaseModel> scan(Scan scan, String tableName, Class<HBaseModel> clz) {
+    public List<? extends HBaseModel> scan(Scan scan, String tableName, Class<? extends HBaseModel> clz) {
         List<HBaseModel> ret = new ArrayList<>();
         try {
-            HTableInterface htable = getTable(tableName);
+            Table htable = getTable(tableName);
             ResultScanner results = htable.getScanner(scan);
             if (results != null) {
                 for (Result result : results) {
                     HBaseModel model = clz.newInstance();
-                    model.parse(result);
+                    HBaseHelper.parse(result, model);
                     ret.add(model);
                 }
             }
         } catch (IOException e) {
-            logger.error("hbase scan result list error, table name = {}", tableName, e);
+            logger.error(String.format("hbase scan result list error, table name = %s", tableName), e);
         } catch (IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
         }
         return ret;
     }
 
-    // TODO: 01/11/2017 批量操作待补充
-    public void batchGet() {
-
+    /**
+     * 批量操作, 包括put, get和delete
+     *
+     * @return 每个操作的返回结果
+     * null: 通信失败
+     * Delete/Put: EmptyResult
+     * Get: Result
+     */
+    public Object[] batch(List<Row> rows, String tableName) {
+        Table htable = getTable(tableName);
+        try {
+            Object[] results = new Object[rows.size()];
+            htable.batch(rows, results);
+            return results;
+        } catch (IOException | InterruptedException e) {
+            logger.error(String.format("hbase batch operate error, table name = %s", tableName), e);
+        }
+        return null;
     }
 
-    public void batchPut() {
-
-    }
-
-    public void batchDelete() {
-
-    }
-
-    public HTableInterface getTable(String tableName) {
+    public Table getTable(String tableName) {
         int retry = 0;
         // 获取表是核心, 这里添加重试机制
         while (retry <= 3) { // 重试三次, 这里可配置
             try {
-                return conn.getTable(Bytes.toBytes(tableName));
+                return conn.getTable(TableName.valueOf(tableName));
             } catch (IOException e) {
                 retry++;
-                logger.error("get hbase table failed, table name = {}, retry times = {}", tableName, retry, e);
+                e.printStackTrace();
+                logger.error(String.format("get hbase table failed, table name = %s, retry times = %d", tableName, retry), e);
             }
         }
         disConn(); // 获取table失败就关闭好了
         return null;
     }
 
-    public HTableInterface getTable(HBaseModel model) {
-        return getTable(model.getTable());
+    public Table getTable(HBaseModel model) {
+        return getTable(model.table());
     }
 
     /**
@@ -188,9 +197,9 @@ public class HBaseTool {
     /**
      * @return 获取hbase连接
      */
-    private HConnection establishConn() {
+    private Connection establishConn() {
         try {
-            conn = HConnectionManager.createConnection(conf);
+            conn = ConnectionFactory.createConnection(conf);
         } catch (IOException e) {
             logger.error("get conn error", e);
         }
@@ -198,10 +207,17 @@ public class HBaseTool {
     }
 
     /**
-     * 默认为 classpath:hbase-default.xml/hbase-site.xml
+     * 默认为 classpath:hbase-default.xml/dev-hbase-site.xml
      */
     private void reload() {
         Configuration newConf = HBaseConfiguration.create();
+        StringBuilder hbasePath = new StringBuilder("config/hbase/");
+        String hbaseName = "hbase-site.xml";
+        hbasePath.append(hbaseName);
+        URL url = Thread.currentThread().getContextClassLoader().getResource(hbasePath.toString());
+        if (url != null) {
+            newConf.addResource(url);
+        }
         if (conf != null) {
             HBaseConfiguration.merge(conf, newConf);
         } else {

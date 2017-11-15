@@ -11,5 +11,19 @@
 
     <artifactId>dao</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>hithop-spring</groupId>
+            <artifactId>common</artifactId>
+            <version>${hithop.version}</version>
+        </dependency>
+        <!--hbase start-->
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-client</artifactId>
+            <version>${hbase.version}</version>
+        </dependency>
+        <!--hbase end-->
+    </dependencies>
 
 </project>
