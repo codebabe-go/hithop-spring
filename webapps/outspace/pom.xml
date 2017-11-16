@@ -13,16 +13,15 @@
 
     <build>
         <resources>
-            <!--common start-->
-            <resource>
-                <directory>../../engine/src/main/resources</directory>
-            </resource>
-            <!--common end-->
-            <!--engine start-->
             <resource>
                 <directory>../../common/src/main/resources</directory>
             </resource>
-            <!--engine end-->
+            <resource>
+                <directory>../../engine/src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>../../dao/src/main/resources</directory>
+            </resource>
         </resources>
     </build>
 

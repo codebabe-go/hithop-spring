@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
  * author: code.babe
  * date: 2017-09-11 20:41
  */
-@Configuration
+//@Configuration
 public class OutspaceConfiguration {
 
     @Bean

@@ -27,6 +27,11 @@
             <artifactId>engine</artifactId>
             <version>${hithop.version}</version>
         </dependency>
+        <dependency>
+            <groupId>hithop-spring</groupId>
+            <artifactId>dao</artifactId>
+            <version>${hithop.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

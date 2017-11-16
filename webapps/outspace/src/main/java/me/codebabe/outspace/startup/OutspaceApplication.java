@@ -23,7 +23,7 @@ import java.util.Properties;
 @ImportResource({
         "classpath:config/hithop-outspace.xml",
 })
-@ComponentScan(basePackages = "me.codebabe.outspace")
+@ComponentScan(basePackages = {"me.codebabe.outspace", "me.codebabe.dao"})
 public class OutspaceApplication {
 
     private static final Logger logger = LoggerFactory.getLogger(OutspaceApplication.class);
