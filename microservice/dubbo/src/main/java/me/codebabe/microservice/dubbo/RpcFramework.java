@@ -10,6 +10,8 @@ import java.net.Socket;
 /**
  * RpcFramework
  *
+ * 这块在dubbo上主要体现在protocol上
+ *
  * @author william.liangf
  */
 public class RpcFramework {
@@ -34,6 +36,7 @@ public class RpcFramework {
                 new Thread(() -> {
                     try {
                         try {
+                            // input.read()为阻塞读
                             ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
                             try {
                                 String methodName = input.readUTF();
@@ -86,6 +89,34 @@ public class RpcFramework {
         if (port <= 0 || port > 65535)
             throw new IllegalArgumentException("Invalid port " + port);
         System.out.println("Get remote service " + interfaceClass.getName() + " from server " + host + ":" + port);
+
+//        Socket socket = new Socket(host, port);
+//        try {
+//            ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+//            try {
+//                // 需要指定方法, 对接口设计难度加大
+////                Method method = interfaceClass.getMethod(methodName, parameterTypes);
+//                Method[] methods = interfaceClass.getMethods();
+//                for (Method method : methods) {
+//                    output.writeUTF(method.getName());
+//                    output.writeObject(method.getParameterTypes());
+//                    output.writeObject(arguments);
+//                    ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
+//                    try {
+//                        Object result = input.readObject();
+//                        return (T) result;
+//                    } finally {
+//                        input.close();
+//                    }
+//                }
+//            } finally {
+//                output.close();
+//            }
+//        } finally {
+//            socket.close();
+//        }
+
+        // 动态代理的好处是, 对所有的方法都进行解耦, 对所有的方法都采取这个方式(切面), 当用到的时候才去做这件事情, 但是同步去做的话必须得指定方法名才能去做
         return (T) Proxy.newProxyInstance(interfaceClass.getClassLoader(), new Class<?>[] {interfaceClass}, (proxy, method, arguments) -> {
             Socket socket = new Socket(host, port);
             try {
