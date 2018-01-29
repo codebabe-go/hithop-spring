@@ -39,6 +39,7 @@
         <commons.dbcp2.version>2.1.1</commons.dbcp2.version>
         <mysql.version>5.1.41</mysql.version>
         <dubbo.version>2.5.3</dubbo.version>
+        <akka.version>2.3.15</akka.version>
         <!--engine-->
         <curator.version>2.9.1</curator.version>
         <zk.version>3.4.10</zk.version>
