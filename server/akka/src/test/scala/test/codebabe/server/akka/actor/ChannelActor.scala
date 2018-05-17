@@ -1,7 +1,7 @@
 package test.codebabe.server.akka.actor
 
 import akka.actor.{Actor, ReceiveTimeout}
-import test.codebabe.server.akka.{Ping, Pong}
+import test.codebabe.server.akka.{Hi, Ping, Pong}
 
 import scala.concurrent.duration._
 import scala.language.postfixOps
@@ -15,9 +15,13 @@ class ChannelActor extends Actor {
     case Ping =>
       context.setReceiveTimeout(5 second)
       println(s"${System.currentTimeMillis()}-ping")
+//      while (true) {
+//      }
       Thread.sleep(10000)
     case Pong =>
       println(s"${System.currentTimeMillis()}-pong")
+    case Hi =>
+      println(s"hello world")
     case ReceiveTimeout =>
       println(s"${System.currentTimeMillis()}-tiemout")
   }

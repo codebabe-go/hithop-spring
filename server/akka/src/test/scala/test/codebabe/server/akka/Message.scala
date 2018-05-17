@@ -8,3 +8,4 @@ sealed trait Message
 
 case object Ping extends Message
 case object Pong extends Message
+case object Hi extends Message
